@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:repository/repository/fact_repository.dart';
 import 'package:repository/view_model/fact_view_model.dart';
 
 class FactScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class FactScreen extends StatefulWidget {
 
 class _FactScreenState extends State<FactScreen> {
   final factViewModel = FactViewModel();
+  final factRepository = FactRepository();
   bool isLoading = false;
 
   @override
@@ -18,16 +20,19 @@ class _FactScreenState extends State<FactScreen> {
     loadFacts();
   }
 
-  void loadFacts() async {
-    setState(() {
-      isLoading = true;
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    factViewModel.facts.clear();
+  }
 
+  void loadFacts() async {
+    setState(() => isLoading = true);
+
+    await Future.delayed(Duration(milliseconds: 300));
     await factViewModel.getFacts();
 
-    setState(() {
-      isLoading = false;
-    });
+    setState(() => isLoading = false);
   }
 
   @override
@@ -36,7 +41,18 @@ class _FactScreenState extends State<FactScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Facts"),
-        actions: [IconButton(onPressed: loadFacts, icon: Icon(Icons.refresh))],
+        actions: [
+          IconButton(
+            onPressed: () async {
+              isLoading = true;
+              setState(() {});
+              await factViewModel.getFresh();
+              isLoading = false;
+              setState(() {});
+            },
+            icon: Icon(Icons.refresh),
+          ),
+        ],
       ),
       body:
           isLoading

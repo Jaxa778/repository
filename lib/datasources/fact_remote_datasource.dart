@@ -16,17 +16,13 @@ class FactRemoteDatasource {
       );
     }
 
-    if (response.body == "null") {
-      return [];
-    }
-
     final decodedData = jsonDecode(response.body);
     List factsList = decodedData['data'];
 
     List<FactsModel> allFacts = [];
 
     for (var fact in factsList) {
-      allFacts.add(FactsModel.fromJson(fact));
+      allFacts.add(FactsModel(dates: fact));
     }
     return allFacts;
   }

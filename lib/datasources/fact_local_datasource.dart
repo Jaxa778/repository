@@ -16,13 +16,13 @@ class FactLocalDatasource {
   Future<List<FactsModel>?> getLogalFact() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     final List<String>? jsonList = sharedPreferences.getStringList("data");
-    if (jsonList == null) return [];
+    if (jsonList == null) return null;
 
     final factsList = <FactsModel>[];
 
     for (var jsonItem in jsonList) {
       final decodedData = jsonDecode(jsonItem);
-      factsList.add(FactsModel.fromJson(decodedData["data"]));
+      factsList.add(FactsModel(dates: decodedData["data"]));
     }
     return factsList;
   }

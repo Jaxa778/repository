@@ -14,6 +14,13 @@ class FactRepository {
       await factLocalDatasource.saveFacts(remoteData);
       return remoteData;
     }
+
     return localData;
+  }
+
+  Future<List<FactsModel>> getFreshData() async {
+    final newMassege = await factRemoteDatasource.getFact();
+    await factLocalDatasource.saveFacts(newMassege);
+    return newMassege;
   }
 }

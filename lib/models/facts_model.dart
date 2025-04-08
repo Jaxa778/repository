@@ -4,10 +4,6 @@ class FactsModel {
 
   FactsModel({required this.dates});
 
-  factory FactsModel.fromJson(String json) {
-    return FactsModel(dates: json);
-  }
-
   Map<String, dynamic> toJson() {
     return {"data": dates};
   }

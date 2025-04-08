@@ -10,4 +10,11 @@ class FactViewModel {
 
     facts = result;
   }
+
+  Future<void> getFresh() async {
+    final result = await factRepository.getFreshData();
+
+    facts = result;
+  }
+
 }
