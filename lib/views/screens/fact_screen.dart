@@ -15,12 +15,18 @@ class _FactScreenState extends State<FactScreen> {
   @override
   void initState() {
     super.initState();
+    loadFacts();
+  }
 
-    isLoading = true;
-    factViewModel.getFacts().then((_) {
-      setState(() {
-        isLoading = false;
-      });
+  void loadFacts() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    await factViewModel.getFacts();
+
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -30,7 +36,7 @@ class _FactScreenState extends State<FactScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Facts"),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.refresh))],
+        actions: [IconButton(onPressed: loadFacts, icon: Icon(Icons.refresh))],
       ),
       body:
           isLoading
@@ -38,11 +44,9 @@ class _FactScreenState extends State<FactScreen> {
               : ListView.separated(
                 itemBuilder: (context, index) {
                   final fact = factViewModel.facts[index];
-                  return Text("${index + 1}.${fact.dates}");
+                  return ListTile(title: Text("${index + 1}. ${fact.dates}"));
                 },
-                separatorBuilder: (context, index) {
-                  return Divider();
-                },
+                separatorBuilder: (context, index) => Divider(),
                 itemCount: factViewModel.facts.length,
               ),
     );
